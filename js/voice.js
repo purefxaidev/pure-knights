@@ -25,7 +25,7 @@ const Voice = (() => {
     const buf = pcmToBuffer(part.inlineData.data, rate); cache.set(ck, buf); return buf;
   }
   function playBuf(buf){ return new Promise(res=>{ const a=ac(); const s=a.createBufferSource(); const g=a.createGain(); g.gain.value=cfg().vol; s.buffer=buf; s.connect(g).connect(a.destination); s.onended=res; s.start(); }); }
-  function playMp3(name){ return new Promise(res=>{ const au = new Audio('assets/audio/'+name+'.mp3'); au.volume=cfg().vol; au.onended=res; au.onerror=res; au.play().catch(res); }); }
+  function playMp3(name){ return new Promise(res=>{ const au = new Audio('assets/voice/'+name+'.mp3'); au.volume=cfg().vol; setTimeout(res,9000); au.onended=res; au.onerror=res; au.play().catch(res); }); }
   function speakTH(text, pitch=1, rate=1.05){ return new Promise(res=>{ if(!('speechSynthesis' in window)) return res();
     const u = new SpeechSynthesisUtterance(text); u.lang='th-TH'; u.pitch=pitch; u.rate=rate; u.volume=cfg().vol;
     const v = speechSynthesis.getVoices().find(v=>/th/i.test(v.lang)); if(v) u.voice=v;
@@ -44,17 +44,23 @@ const Voice = (() => {
     pending++; const done=()=>{pending--;};
     busy = busy.then(job, job).then(done, done); return busy;
   }
-  function hero(def, kind){ return say(def.lines[kind], {voice:def.voice, style:def.style, mp3: def.mp3 && def.mp3[kind], prio: kind==='ult'||kind==='capture'||kind==='intro', pitch: def.role==='general'?0.7:1}); }
+  // pre-generated Gemini clips (assets/voice/<key>.mp3, listed in manifest.json) -> live Gemini (player key) -> browser th-TH
+  let CLIPS = new Set(); fetch('assets/voice/manifest.json').then(r=>r.ok?r.json():[]).then(a=>{ CLIPS=new Set(a); }).catch(()=>{});
+  function clip(key, text, def, o={}){ const c=cfg(); if(!c.on) return Promise.resolve();
+    if(CLIPS.has(key)){ if(pending>=2 && !o.prio && !/_ult$|_capture$|^story/.test(key)) return Promise.resolve(); pending++; const done=()=>{pending--;}; busy=busy.then(()=>playMp3(key)).then(done,done); return busy; }
+    if(!text) return Promise.resolve();
+    return say(text, {voice:def&&def.voice||'Charon', style:def&&def.style||'ผู้บรรยายมหากาพย์ ตื่นเต้น', prio:/_ult$|_capture$|^story/.test(key), pitch: def&&(def.general||def.boss)?0.7:1}); }
+  function hero(def, kind){ return clip(def.id+'_'+kind, def.lines&&def.lines[kind], def, {prio: kind==='ult'||kind==='capture'||kind==='intro'}); }
   function narrate(text){ if(!cfg().narr) return Promise.resolve(); return say(text, {voice:'Charon', style:'ผู้บรรยายมหากาพย์ ตื่นเต้น เร้าใจ', pitch:0.9}); }
   // short synthesized SFX
   function sfx(type){ const a = ac(); if(!a) return; const t=a.currentTime, g=a.createGain(), v=cfg().vol*0.35; g.connect(a.destination);
     const o=a.createOscillator();
-    const P = {hit:['square',220,60,.12], slash:['sawtooth',900,120,.15], magic:['sine',520,1400,.35], heal:['sine',660,990,.4], coin:['triangle',1200,1800,.18], ult:['sawtooth',120,900,.6], boom:['square',90,30,.4], tap:['triangle',700,500,.05], seal:['sine',300,1200,.8]}[type]||['sine',440,440,.1];
+    const P = {hit:['square',220,60,.12], slash:['sawtooth',900,120,.15], magic:['sine',520,1400,.35], heal:['sine',660,990,.4], coin:['triangle',1200,1800,.18], ult:['sawtooth',120,900,.6], boom:['square',90,30,.4], tap:['triangle',700,500,.05], seal:['sine',300,1200,.8], dash:['sawtooth',300,1500,.12], roar:['sawtooth',90,60,.7], fire:['sawtooth',200,80,.6], zap:['square',1800,200,.15], wave:['sine',120,60,.8], charm:['sine',880,1320,.5], boss:['sawtooth',70,40,1.2]}[type]||['sine',440,440,.1];
     o.type=P[0]; o.frequency.setValueAtTime(P[1],t); o.frequency.exponentialRampToValueAtTime(Math.max(20,P[2]),t+P[3]);
     g.gain.setValueAtTime(v,t); g.gain.exponentialRampToValueAtTime(0.001,t+P[3]); o.connect(g); o.start(t); o.stop(t+P[3]+.02);
-    if(type==='boom'||type==='hit'||type==='ult'){ const n=a.createBufferSource(), b=a.createBuffer(1,a.sampleRate*.25,a.sampleRate), d=b.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*(1-i/d.length); n.buffer=b; const g2=a.createGain(); g2.gain.value=v*.6; n.connect(g2).connect(a.destination); n.start(t); }
+    if(['boom','hit','ult','roar','fire','wave','boss'].includes(type)){ const n=a.createBufferSource(), b=a.createBuffer(1,a.sampleRate*.25,a.sampleRate), d=b.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*(1-i/d.length); n.buffer=b; const g2=a.createGain(); g2.gain.value=v*.6; n.connect(g2).connect(a.destination); n.start(t); }
   }
   async function test(){ lastErr=''; const c=cfg(); if(!c.key) { await speakTH('ทดสอบเสียงภาษาไทย ยังไม่ได้ใส่คีย์ Gemini ใช้เสียงของเบราว์เซอร์แทน'); return 'browser'; }
     try { const b = await gemini('ยินดีต้อนรับสู่ เพียว ไนท์ส ขุนพลแห่งตำนาน!', 'Kore', 'ร่าเริง'); await playBuf(b); return 'gemini'; } catch(e){ lastErr=String(e.message||e); return 'error'; } }
-  return {say, hero, narrate, sfx, test, unlock:ac, get lastErr(){return lastErr;}};
+  return {say, clip, has:k=>CLIPS.has(k), hero, narrate, sfx, test, unlock:ac, get lastErr(){return lastErr;}};
 })();

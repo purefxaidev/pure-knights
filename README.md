@@ -6,17 +6,43 @@ A mobile-first, turn-based hero-collection RPG (Seven Knights style) that runs i
 
 **▶️ เล่นเลย / Play now: https://purefxaidev.github.io/pure-knights/**
 
-| หน้าหลัก | ต่อสู้ | ท่าไม้ตาย | จับขุนพล |
+| ล็อบบี้ | แผนที่ | ต่อสู้ | ท่าไม้ตาย |
 |---|---|---|---|
-| ![](screens/01_home.jpg) | ![](screens/03_battle.jpg) | ![](screens/04_ultimate_cutin.jpg) | ![](screens/06_capture.jpg) |
+| ![](screens/01_lobby.jpg) | ![](screens/02_map.jpg) | ![](screens/03_battle.jpg) | ![](screens/04_ultimate.jpg) |
+| **บอสยักษ์** | **จับขุนพล** | **อัปสกิล** | **อัญเชิญ** |
+| ![](screens/05_boss.jpg) | ![](screens/06_capture.jpg) | ![](screens/07_skill_upgrade.jpg) | ![](screens/08_summon.jpg) |
 
 > ⚠️ **Prototype:** PURE เป็นแต้มในเกมที่เก็บในเครื่อง (localStorage) เท่านั้น ยังไม่ใช่โทเคนจริง ไม่มีมูลค่าเป็นเงิน และยังไม่มีการเชื่อมวอลเล็ตจริง / PURE is an in-game balance stored locally. No real token, no real money, no wallet connection yet.
 
 ---
 
+## ✨ v2 — มีอะไรใหม่ / What's new
+- **แนวนอน + แนวตั้ง (Responsive)** — แนวนอนแบบ Seven Knights: ทีมเราซ้าย ศัตรูขวา ปุ่มสกิลด้านล่าง; แนวตั้งจัดเลย์เอาต์ให้อัตโนมัติ / Landscape (Seven Knights layout) and portrait both supported.
+- **ล็อบบี้ใหม่** — อวาตาร์/เลเวล/VIP, แถบทรัพยากร (สตามิน่า 150, ทอง, เพชร, PURE), กิจกรรม/เช็กอิน/พาส/ภารกิจ, แบนเนอร์ Rate Up, โหมด เนื้อเรื่อง/พิเศษ/อารีน่า/เรด, ปุ่ม **เริ่มผจญภัย** / New lobby.
+- **ระดับความหายาก R / SR / SSR / UR** — กรอบ สี และดาวสูงสุดต่างกัน (R 5★ · SR 6★ · SSR 7★ · UR 8★) อัตราอัญเชิญ 58/30/10/2%, x10 การันตี SR+ / Rarity tiers.
+- **อัปสกิล** — สกิลและท่าไม้ตายของทุกตัวอัปได้ถึง Lv.10 ด้วยทอง + 📘 คัมภีร์สกิล แสดงค่าก่อน→หลัง / Skill & ultimate upgrades with before→after preview.
+- **ฮีโร่ใหม่** — 16 ตัว รวมสาวอนิเมะ: ซากุระ, ธิดาสมุทร, วาลคิรี [UR], **ลิลิธ ซัคคิวบัส [UR]** (Charm/เสน่ห์ทำให้ศัตรูตีพวกเดียวกัน, ดูดเลือด) / New heroes incl. a UR Succubus.
+- **บอสยักษ์** — ทรีแอนท์โบราณ, มังกรเพลิง, จักรพรรดิผลึกทมิฬ (ด่าน x-3) มีแถบเลือดบอส ซูมเปิดตัว คลั่งเมื่อเลือด < 50% / Giant boss battles.
+- **กราฟิก/แอ็กชัน** — อาร์ตเต็มตัวใหม่ทั้งหมด, หายใจ idle, พุ่งเข้าตี, กล้องซูม/สั่น, hit-stop, เอฟเฟกต์ท่าไม้ตายเฉพาะตัวทุกตัว, แผนที่โลกวาดใหม่ + เส้นทางเคลื่อนไหว, UI kit ใน `assets/ui/` (เปลี่ยนรูปได้).
+- **เนื้อเรื่อง** — บทสนทนาก่อนด่านสำคัญพร้อมเสียงพากย์ / Story dialogue before key stages.
+- **เสียงพากย์ Gemini** — ไฟล์เสียงที่อัดไว้ล่วงหน้าใน `assets/voice/` (ใช้เสียงต่างกันต่อตัวละคร) ไม่ต้องใส่คีย์ก็ได้ยิน; บทพูดที่ยังไม่มีไฟล์จะพากย์สดถ้าใส่คีย์ / Pre-generated Gemini voice clips + live TTS with your own key.
+
+### 🎬 ใส่วิดีโอท่าไม้ตาย / Ultimate videos (drop-in)
+วางไฟล์ `assets/ult/<heroId>.mp4` (เช่น `succubus.mp4`, แนะนำ ≤15 วินาที, H.264) แล้วเพิ่มใน `assets/ult/manifest.json`:
+```json
+{"videos": {"succubus": "succubus.mp4", "tank": "tank.mp4"}}
+```
+เกมจะเล่นวิดีโอตอนใช้ท่าไม้ตาย (กดข้ามได้) ถ้าไฟล์โหลดไม่ได้จะใช้คัตอินแทน ตั้งค่าได้ใน ⚙️: ครั้งแรกต่อการต่อสู้ / ทุกครั้ง / ปิด
+Hero ids: tank, fighter, mage, marksman, assassin, support, flame, thunder, dragon, sakura, ocean, valkyrie, succubus, tiger, witch, demon.
+
+### 🔊 เพิ่มเสียงพากย์ / Regenerating voice clips
+`GEMINI_API_KEY=... python3 tools/gen_voice.py` — อ่านบทจาก `tools/voice_lines.json` สร้างไฟล์ที่ยังขาด (ข้ามไฟล์ที่มีแล้ว) จากนั้นสร้าง `assets/voice/manifest.json` ใหม่ (free tier ติด rate limit ~3 ครั้ง/นาที และโควต้ารายวัน) **ห้าม commit คีย์**
+
+---
+
 ## 🇹🇭 วิธีเล่น
 
-1. เปิดลิงก์บนมือถือ (แนวตั้ง) → กด **⚔️ ผจญภัย**
+1. เปิดลิงก์บนมือถือ (แนวนอนหรือแนวตั้ง) → กด **เริ่มผจญภัย** (ใช้สตามิน่า 6/ด่าน ฟื้น 1 ทุก 2 นาที)
 2. เลือกด่านบนแผนที่ (3 บท × 5 ด่าน) → **เริ่มต่อสู้**
 3. ทีม 5 ฮีโร่ สู้กับศัตรู 3 คลื่น ลำดับเทิร์นตามค่าความเร็ว (แถบด้านบน)
    - แตะปุ่ม **สกิล** (ซ้าย) เพื่อจองคิวสกิล — ใช้ในเทิร์นถัดไปของฮีโร่ตัวนั้น (ตัวเลขบนปุ่ม = ลำดับคิว)
@@ -41,7 +67,7 @@ Android (Chrome): เมนู ⋮ → *ติดตั้งแอป* · iPhon
 
 ## 🇬🇧 How to play
 
-1. Open the link on your phone (portrait) → **⚔️ ผจญภัย (Adventure)**.
+1. Open the link on your phone (landscape or portrait) → **เริ่มผจญภัย (Start Adventure)** (6 stamina per stage).
 2. Pick a stage on the campaign map (3 chapters × 5 stages) → **Fight**.
 3. 5 heroes vs 3 enemy waves; turn order is by speed (strip at the top).
    - Tap a hero's **skill** button to queue it for that hero's next turn (number = queue order).
@@ -56,9 +82,9 @@ Get a free key at https://aistudio.google.com/apikey → in game **⚙️ Settin
 
 ## 🛠️ Tech
 - Plain HTML5 Canvas + vanilla JS, no build step, no paid services. PWA (manifest + service worker, offline asset cache).
-- Files: `js/data.js` (heroes/generals/stages), `js/battle.js` (turn engine + renderer + FX), `js/voice.js` (Gemini TTS / fallbacks / synth SFX), `js/game.js` (screens, save, economy, capture).
-- Art: AI-generated anime art (heroes, generals, monsters, backgrounds) by PureFxAi. `tools/process.py` keys chroma backgrounds into game sprites.
-- Run locally: `python3 -m http.server` → open `http://localhost:8000`. Headless test: `python3 tests/play.py http://localhost:8000/` (Playwright).
+- Files: `js/data.js` (heroes/tiers/bosses/stages/story), `js/battle.js` (turn engine + camera + renderer), `js/fx.js` (unique ultimate VFX), `js/voice.js` (Gemini TTS / fallbacks / synth SFX), `js/game.js` (screens, save, economy, capture).
+- Art: AI-generated anime art (heroes, generals, monsters, backgrounds) by PureFxAi. `tools/process.py`/`process2.py` key chroma backgrounds into sprites; UI kit sliced into `assets/ui/`.
+- Run locally: `python3 -m http.server` → open `http://localhost:8000`. Headless test: `python3 tests/play.py http://localhost:8000/ shots/ full land,desk,port` (Playwright).
 
 ## 🗺️ Roadmap
 - Real PURE token on Base + wallet connect & withdraw (with server-side anti-cheat — local balances can be edited by players)

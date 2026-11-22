@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#1a0b33">
+<meta name="theme-color" content="#0d0820">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <title>PURE Knights — ขุนพลแห่งตำนาน</title>
-<meta name="description" content="เกม RPG เทิร์นเบสบนมือถือ สะสมฮีโร่ จับขุนพล เล่นแล้วได้เหรียญ PURE พากย์ไทยด้วย Gemini">
+<meta name="description" content="เกม RPG เทิร์นเบสสะสมฮีโร่ แนวนอน/แนวตั้ง จับขุนพล บอสยักษ์ อัปสกิล เล่นแล้วได้เหรียญ PURE พากย์ไทยด้วย Gemini">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="assets/icon-192.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
@@ -15,68 +15,81 @@
 </head>
 <body>
 <div id="app">
-  <!-- resource bar -->
+  <!-- global resource bar -->
   <header id="topbar">
-    <div class="res" id="r-pure" data-go="wallet"><img src="assets/spr/item_crystal.webp" alt=""><b>0</b><small>PURE</small></div>
-    <div class="res"><img src="assets/spr/item_gem.webp" alt=""><b id="r-gems">0</b></div>
-    <div class="res"><img src="assets/spr/item_gold.webp" alt=""><b id="r-gold">0</b></div>
-    <div class="res"><span class="talis">🧿</span><b id="r-tal">0</b></div>
-    <button class="icon-btn" data-go="settings" aria-label="ตั้งค่า">⚙️</button>
+    <button id="tb-back" class="tb-back" data-go="home" aria-label="กลับ">‹</button>
+    <div id="tb-title"></div>
+    <div class="resbar">
+      <div class="res"><span class="ri">⚡</span><b id="r-stam">150/150</b></div>
+      <div class="res"><img src="assets/spr/item_gold.webp" alt=""><b id="r-gold">0</b><button class="plus" data-go="quests">+</button></div>
+      <div class="res"><img src="assets/spr/item_gem.webp" alt=""><b id="r-gems">0</b><button class="plus" data-go="summon">+</button></div>
+      <div class="res pure" data-go="wallet"><img src="assets/ui/coin_pure.webp" alt=""><b id="r-pure">0</b><button class="plus" data-go="wallet">+</button></div>
+    </div>
+    <div class="tb-icons"><button class="ib" data-soon="กล่องจดหมาย">✉️</button><button class="ib" data-soon="แชท">💬</button><button class="ib set" data-go="settings" aria-label="ตั้งค่า"></button></div>
   </header>
 
+  <!-- LOBBY -->
   <section id="home" class="screen active">
-    <div class="home-bg"></div>
+    <div class="lobby-bg"></div><div id="lobby-team"></div><div class="lobby-shade"></div>
+    <div class="player" data-go="heroes"><div class="avatar"><img id="pl-ava" alt=""></div><div><b id="pl-name">ผู้กล้าแห่งเพียว</b><div class="pl-sub"><span id="pl-lv">Lv.1</span><span class="vip">VIP 0</span></div><div class="plpow" id="pl-pow"></div></div></div>
     <div class="logo"><div class="l1">PURE KNIGHTS</div><div class="l2">ขุนพลแห่งตำนาน</div></div>
-    <img id="home-leader" class="leader" alt="">
-    <div class="home-info"><div id="home-power"></div><div id="home-progress"></div></div>
-    <div class="home-btns">
-      <button class="btn big gold" data-go="map">⚔️ ผจญภัย</button>
-      <div class="row"><button class="btn" data-go="quests">📜 ภารกิจรายวัน <i class="dot" id="q-dot"></i></button><button class="btn" data-go="wallet">💎 กระเป๋า PURE</button></div>
+    <div class="side-menu">
+      <button data-soon="อันดับ"><span>🏆</span>อันดับ</button><button data-soon="เพื่อน"><span>👥</span>เพื่อน</button>
+      <button data-soon="กิลด์"><span>🏰</span>กิลด์</button><button data-go="wallet"><span>💱</span>แลกเปลี่ยน</button>
     </div>
+    <div class="events">
+      <button data-soon="กิจกรรม"><span>🎉</span>กิจกรรม<i class="dot on"></i></button>
+      <button id="ev-checkin"><span>📅</span>เช็กอิน<i class="dot" id="ci-dot"></i></button>
+      <button data-soon="พาส"><span>🎫</span>พาส</button>
+      <button data-go="quests"><span>📜</span>ภารกิจ<i class="dot" id="q-dot"></i></button>
+    </div>
+    <button class="rateup" data-go="summon"><img id="ru-art" alt=""><div class="ru-txt"><b>RATE UP!</b><span id="ru-name"></span><small>อัญเชิญเลย ›</small></div></button>
+    <div class="modes">
+      <button class="mode m-story" data-go="map"><b>เนื้อเรื่อง</b><small id="md-prog"></small></button>
+      <button class="mode m-special" data-go="map" data-arg="boss"><b>พิเศษ</b><small>บอสยักษ์</small></button>
+      <button class="mode m-arena" data-soon="อารีน่า"><b>อารีน่า</b><small>เร็วๆ นี้</small></button>
+      <button class="mode m-raid" data-soon="เรด"><b>เรด</b><small>เร็วๆ นี้</small></button>
+    </div>
+    <button class="start-btn" data-go="map">เริ่มผจญภัย</button>
+    <nav class="bottom-bar">
+      <button data-go="heroes"><span>🦸</span>ตัวละคร</button><button data-go="heroes" data-arg="team"><span>🛡️</span>จัดทีม</button>
+      <button data-soon="อุปกรณ์"><span>⚔️</span>อุปกรณ์</button><button data-go="heroes"><span>⬆️</span>อัปเกรด</button>
+      <button data-go="summon"><span>💎</span>อัญมณี</button><button data-go="heroes" data-arg="skill"><span>📘</span>สกิล</button>
+      <button data-go="collection"><span>🖼️</span>คอลเลกชัน</button>
+    </nav>
   </section>
 
-  <section id="map" class="screen"><div class="map-wrap"><img src="assets/bg/bg_map.webp" class="map-img" alt=""><div id="map-nodes"></div></div><div class="map-title" id="map-title"></div></section>
-
-  <section id="heroes" class="screen"><div class="panel-h">ทีมของฉัน <small>(แตะฮีโร่เพื่ออัปเกรด / จัดทีมสูงสุด 5)</small></div><div id="team-slots"></div><div class="panel-h">ฮีโร่ทั้งหมด <small id="roster-count"></small></div><div id="roster"></div></section>
-
-  <section id="hero" class="screen"><div id="hero-detail"></div></section>
-
+  <section id="map" class="screen"><div class="map-wrap" id="map-wrap"><img class="map-img" id="map-img" alt=""><svg id="map-path"></svg><div id="map-nodes"></div></div><div class="map-title" id="map-title"></div></section>
+  <section id="heroes" class="screen"><div class="wrap"><div class="tabs" id="h-tabs"></div><div class="panel-h">ทีมของฉัน <small>(สูงสุด 5 · แตะเพื่ออัปเกรด)</small></div><div id="team-slots"></div><div class="panel-h">ฮีโร่ทั้งหมด <small id="roster-count"></small></div><div id="roster"></div></div></section>
+  <section id="hero" class="screen"><div class="wrap" id="hero-detail"></div></section>
+  <section id="collection" class="screen"><div class="wrap"><div class="panel-h">คอลเลกชัน <small id="col-count"></small></div><div id="col-grid"></div></div></section>
   <section id="summon" class="screen"><div class="summon-bg"></div>
-    <div class="summon-ui"><div class="panel-h center">แท่นอัญเชิญดวงดาว</div>
-      <p class="rates">★5 6% · ★4 30% · ★3-4 ที่เหลือ — ขุนพล (General) อัญเชิญไม่ได้ ต้อง "จับ" ในด่าน!</p>
-      <div class="row"><button class="btn gold" id="sum1">อัญเชิญ x1<br><small>💎 100</small></button><button class="btn gold" id="sum10">อัญเชิญ x10<br><small>💎 900</small></button></div>
-    </div>
-    <div id="summon-result"></div>
-  </section>
-
-  <section id="quests" class="screen"><div class="panel-h">ภารกิจรายวัน <small>รีเซ็ตทุกวัน</small></div><div id="quest-list"></div><p class="note" id="cap-note"></p></section>
-
-  <section id="wallet" class="screen"><div id="wallet-body"></div></section>
-
-  <section id="settings" class="screen"><div id="settings-body"></div></section>
+    <div class="summon-ui"><div class="banner-card" id="sum-banner"></div>
+      <p class="rates">UR 2% · SSR 10% · SR 30% · R 58% — ขุนพล (General) อัญเชิญไม่ได้ ต้อง "จับ" ในด่าน!</p>
+      <div class="row"><button class="btn gold" id="sum1">อัญเชิญ x1<br><small>💎 100</small></button><button class="btn gold" id="sum10">อัญเชิญ x10<br><small>💎 900 · การันตี SR+</small></button></div></div>
+    <div id="summon-result"></div></section>
+  <section id="quests" class="screen"><div class="wrap"><div class="panel-h">ภารกิจรายวัน <small>รีเซ็ตทุกวัน</small></div><div id="quest-list"></div><p class="note" id="cap-note"></p></div></section>
+  <section id="wallet" class="screen"><div class="wrap" id="wallet-body"></div></section>
+  <section id="settings" class="screen"><div class="wrap" id="settings-body"></div></section>
 
   <section id="battle" class="screen">
     <canvas id="bcanvas"></canvas>
-    <div id="bhud"><div id="bwave">คลื่น 1/3</div><div id="turnbar"></div>
+    <div id="bhud"><div id="bwave"></div><div id="turnbar"></div>
       <div class="bbtns"><button id="b-auto" class="chip">AUTO</button><button id="b-speed" class="chip">x1</button><button id="b-exit" class="chip">✕</button></div></div>
+    <div id="bossbar"><img alt=""><div><b></b><div class="bb"><i></i></div></div></div>
     <div id="bpanel"></div>
   </section>
-
-  <nav id="nav">
-    <button data-go="home" class="on"><span>🏰</span>หน้าหลัก</button>
-    <button data-go="map"><span>🗺️</span>ผจญภัย</button>
-    <button data-go="heroes"><span>🦸</span>ฮีโร่</button>
-    <button data-go="summon"><span>✨</span>อัญเชิญ</button>
-    <button data-go="wallet"><span>🪙</span>PURE</button>
-  </nav>
 </div>
 
+<div id="story"><img class="st-art" alt=""><div class="st-box"><b class="st-name"></b><p class="st-text"></p><small>แตะเพื่อไปต่อ ›</small></div><button class="st-skip">ข้าม ⏭</button></div>
 <div id="cutin"><div class="ci-lines"></div><div class="ci-band"></div><img class="ci-art" alt=""><div class="ci-text"><div class="ci-name"></div><div class="ci-skill"></div><div class="ci-tag">ท่าไม้ตาย</div></div></div>
+<div id="ultvid"><video playsinline muted preload="auto"></video><div class="uv-name"></div><button class="uv-skip">ข้าม ⏭</button></div>
 <div id="modal"><div class="modal-box"></div></div>
 <div id="toast"></div>
 
 <script src="js/data.js"></script>
 <script src="js/voice.js"></script>
+<script src="js/fx.js"></script>
 <script src="js/battle.js"></script>
 <script src="js/game.js"></script>
 </body>
