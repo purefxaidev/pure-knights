@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#1a0b33">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>PURE Knights — ขุนพลแห่งตำนาน</title>
+<meta name="description" content="เกม RPG เทิร์นเบสบนมือถือ สะสมฮีโร่ จับขุนพล เล่นแล้วได้เหรียญ PURE พากย์ไทยด้วย Gemini">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/icon-192.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+  <!-- resource bar -->
+  <header id="topbar">
+    <div class="res" id="r-pure" data-go="wallet"><img src="assets/spr/item_crystal.webp" alt=""><b>0</b><small>PURE</small></div>
+    <div class="res"><img src="assets/spr/item_gem.webp" alt=""><b id="r-gems">0</b></div>
+    <div class="res"><img src="assets/spr/item_gold.webp" alt=""><b id="r-gold">0</b></div>
+    <div class="res"><span class="talis">🧿</span><b id="r-tal">0</b></div>
+    <button class="icon-btn" data-go="settings" aria-label="ตั้งค่า">⚙️</button>
+  </header>
+
+  <section id="home" class="screen active">
+    <div class="home-bg"></div>
+    <div class="logo"><div class="l1">PURE KNIGHTS</div><div class="l2">ขุนพลแห่งตำนาน</div></div>
+    <img id="home-leader" class="leader" alt="">
+    <div class="home-info"><div id="home-power"></div><div id="home-progress"></div></div>
+    <div class="home-btns">
+      <button class="btn big gold" data-go="map">⚔️ ผจญภัย</button>
+      <div class="row"><button class="btn" data-go="quests">📜 ภารกิจรายวัน <i class="dot" id="q-dot"></i></button><button class="btn" data-go="wallet">💎 กระเป๋า PURE</button></div>
+    </div>
+  </section>
+
+  <section id="map" class="screen"><div class="map-wrap"><img src="assets/bg/bg_map.webp" class="map-img" alt=""><div id="map-nodes"></div></div><div class="map-title" id="map-title"></div></section>
+
+  <section id="heroes" class="screen"><div class="panel-h">ทีมของฉัน <small>(แตะฮีโร่เพื่ออัปเกรด / จัดทีมสูงสุด 5)</small></div><div id="team-slots"></div><div class="panel-h">ฮีโร่ทั้งหมด <small id="roster-count"></small></div><div id="roster"></div></section>
+
+  <section id="hero" class="screen"><div id="hero-detail"></div></section>
+
+  <section id="summon" class="screen"><div class="summon-bg"></div>
+    <div class="summon-ui"><div class="panel-h center">แท่นอัญเชิญดวงดาว</div>
+      <p class="rates">★5 6% · ★4 30% · ★3-4 ที่เหลือ — ขุนพล (General) อัญเชิญไม่ได้ ต้อง "จับ" ในด่าน!</p>
+      <div class="row"><button class="btn gold" id="sum1">อัญเชิญ x1<br><small>💎 100</small></button><button class="btn gold" id="sum10">อัญเชิญ x10<br><small>💎 900</small></button></div>
+    </div>
+    <div id="summon-result"></div>
+  </section>
+
+  <section id="quests" class="screen"><div class="panel-h">ภารกิจรายวัน <small>รีเซ็ตทุกวัน</small></div><div id="quest-list"></div><p class="note" id="cap-note"></p></section>
+
+  <section id="wallet" class="screen"><div id="wallet-body"></div></section>
+
+  <section id="settings" class="screen"><div id="settings-body"></div></section>
+
+  <section id="battle" class="screen">
+    <canvas id="bcanvas"></canvas>
+    <div id="bhud"><div id="bwave">คลื่น 1/3</div><div id="turnbar"></div>
+      <div class="bbtns"><button id="b-auto" class="chip">AUTO</button><button id="b-speed" class="chip">x1</button><button id="b-exit" class="chip">✕</button></div></div>
+    <div id="bpanel"></div>
+  </section>
+
+  <nav id="nav">
+    <button data-go="home" class="on"><span>🏰</span>หน้าหลัก</button>
+    <button data-go="map"><span>🗺️</span>ผจญภัย</button>
+    <button data-go="heroes"><span>🦸</span>ฮีโร่</button>
+    <button data-go="summon"><span>✨</span>อัญเชิญ</button>
+    <button data-go="wallet"><span>🪙</span>PURE</button>
+  </nav>
+</div>
+
+<div id="cutin"><div class="ci-lines"></div><div class="ci-band"></div><img class="ci-art" alt=""><div class="ci-text"><div class="ci-name"></div><div class="ci-skill"></div><div class="ci-tag">ท่าไม้ตาย</div></div></div>
+<div id="modal"><div class="modal-box"></div></div>
+<div id="toast"></div>
+
+<script src="js/data.js"></script>
+<script src="js/voice.js"></script>
+<script src="js/battle.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>
