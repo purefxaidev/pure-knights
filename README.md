@@ -16,6 +16,13 @@ A mobile-first, turn-based hero-collection RPG (Seven Knights style) that runs i
 
 ---
 
+## ✨ v3 — กราฟิกใหม่ทั้งเกม / Visual overhaul
+- **Heroes:** Seline (UR), Veronica (SSR rate-up), Seraphina, Lucius, Raven + covered Lilith — art from the lobby reference sheet, each with unique ultimate FX and Thai voice lines.
+- **Battle HUD** rebuilt to match the reference: boss medallion + HP bar + debuff icons, turn-order column, active-hero panel, glowing purple skill buttons, hero cards, golden italic *Critical!* numbers.
+- **Animation:** layered mesh idle (breath / hair / cape sway), rarity aura, lunge + motion trails, hit flash/knockback, per-hero basic-attack VFX (slash arcs, beams, arrows, claws, orbs), screen shake, ultimate cut-in. The Night Dragon boss flaps its wings and sways its tail.
+- **UI kit:** glossy gold-framed 3D icons, ornate gold/purple modal frame, ring medallions and buttons (`tools/process5.py`).
+- Art pipeline: `tools/process_gpt.py`, `process4.py`, `process5.py` (source PNGs are not committed).
+
 ## ✨ v2 — มีอะไรใหม่ / What's new
 - **แนวนอน + แนวตั้ง (Responsive)** — แนวนอนแบบ Seven Knights: ทีมเราซ้าย ศัตรูขวา ปุ่มสกิลด้านล่าง; แนวตั้งจัดเลย์เอาต์ให้อัตโนมัติ / Landscape (Seven Knights layout) and portrait both supported.
 - **ล็อบบี้ใหม่** — อวาตาร์/เลเวล/VIP, แถบทรัพยากร (สตามิน่า 150, ทอง, เพชร, PURE), กิจกรรม/เช็กอิน/พาส/ภารกิจ, แบนเนอร์ Rate Up, โหมด เนื้อเรื่อง/พิเศษ/อารีน่า/เรด, ปุ่ม **เริ่มผจญภัย** / New lobby.

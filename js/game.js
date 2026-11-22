@@ -46,12 +46,12 @@ document.addEventListener('click',e=>{ const s=e.target.closest('[data-soon]'); 
 addEventListener('resize',()=>{ clearTimeout(go._r); go._r=setTimeout(()=>{ if(curScreen==='map') renderMap(); if(curScreen==='home') renderHome(); },150); });
 
 // ---------- lobby ----------
-function featured(){ const urs=SUMMON_POOL.filter(id=>HEROES[id].tier==='UR'); return urs[new Date().getDate()%urs.length]; }
+function featured(){ return 'veronica'; }
 function renderHome(){
   const lead=HEROES[S.team[0]]; $('#pl-ava').src='assets/'+lead.icon; $('#pl-lv').textContent='Lv.'+accLv(); $('#pl-pow').textContent='⚔️ '+fmt(teamPower());
   $('#md-prog').textContent=`ด่าน ${S.cleared}/15`;
-  const f=HEROES[featured()]; $('#ru-art').src='assets/'+f.art; $('#ru-name').textContent=`${f.name} [${f.tier}]`;
-  const t=S.team.slice(0,isLand()?5:3); const order=t.length>=3?[t[1],t[2],t[0]]:t; // lead in the middle, drawn last
+  const f=HEROES[featured()]; $('#ru-art').src='assets/'+f.art; $('#ru-name').textContent=f.name;
+  return; const t=S.team.slice(0,isLand()?5:3); const order=t.length>=3?[t[1],t[2],t[0]]:t; // lead in the middle, drawn last
   const pos= isLand()? [[8,74],[56,74],[30,90],[ -6,64],[70,64]] : [[2,72],[50,72],[22,88]];
   const ext = isLand()&&t.length>3 ? [t[3],t[4]].filter(Boolean) : [];
   const list=[...ext.map((id,i)=>({id,p:pos[3+i]})), ...order.map((id,i)=>({id,p:pos[i]}))];
@@ -104,37 +104,46 @@ function playStory(i,done){ const lines=STORY[i]; if(!lines||S.storySeen[i]) ret
 }
 
 // ---------- battle ----------
+const SK_BY_EL={fire:'flame',water:'ice',wood:'lotus',light:'spear',dark:'slash',storm:'orb'};
+const skIcon=(d,ult)=>'assets/ui/sk_'+(ult?(d.el==='dark'?'circle':d.el==='storm'?'orb':d.ult&&d.ult.teamShield?'shield':SK_BY_EL[d.el]||'circle'):(d.skill&&d.skill.kind==='shield'?'shield':SK_BY_EL[d.el]||'orb'))+'.webp';
+let _bt=null;
 function startBattle(i){
   if(!S.team.length) return toast('จัดทีมก่อนนะ');
   go('battle'); const st=stageInfo(i);
-  const panel=$('#bpanel'); panel.innerHTML='';
   const team=S.team.map(id=>({id,lvl:S.roster[id].lvl,stars:S.roster[id].stars,sk:S.roster[id].sk}));
-  team.forEach((h,k)=>{ const d=HEROES[h.id], el=ELEM[d.el]; const c=document.createElement('div'); c.className='bc'; c.style.setProperty('--tc',TIERS[d.tier].c);
-    c.innerHTML=`<img class="face" src="assets/${d.icon}"><div class="mid"><div class="nm">${d.name}</div><div class="hp"><i></i></div><div class="en"><i></i></div></div>
-      <div class="sks"><button class="sb sk ${d.sk?'':'noimg'}" style="--c:${el.c};background-image:url(assets/${d.sk||d.icon})"><span class="cdv"></span></button><button class="sb ult ${d.ul?'':'noimg'}" style="--c:${el.c};background-image:url(assets/${d.ul||d.icon})"><span class="cdv"></span></button></div>`;
-    panel.appendChild(c); });
+  $('#bcards').innerHTML=team.map((h,k)=>{ const d=HEROES[h.id]; return `<div class="hc" data-k="${k}" style="--tc:${TIERS[d.tier].c}"><img src="assets/${d.icon}"><span class="rdy"></span><div class="h"><i></i></div><div class="e"><i></i></div></div>`; }).join('');
+  let sel=0; const sk=$('#bskills .sk'), ul=$('#bskills .ult');
   const ui={
-    refresh(){ const b=window.battle; if(!b) return; $$('#bpanel .bc').forEach((c,k)=>{ const u=b.heroes[k]; if(!u) return;
-      c.classList.toggle('dead',!u.alive); c.classList.toggle('cur',b.cur===u);
-      c.querySelector('.hp i').style.width=(100*u.hp/u.maxHp)+'%'; c.querySelector('.en i').style.width=u.energy+'%';
-      const sk=c.querySelector('.sk'), ul=c.querySelector('.ult'), cd1=sk.querySelector('.cdv'), cd2=ul.querySelector('.cdv');
-      cd1.textContent=u.cd>0?u.cd:''; cd1.style.display=u.cd>0?'flex':'none';
-      ul.classList.toggle('ready',u.energy>=100&&u.alive); cd2.style.display=u.energy>=100?'none':'flex'; cd2.textContent=u.energy>=100?'':Math.floor(u.energy)+'%';
-      [sk,ul].forEach((btn,j)=>{ const qi=b.queue.findIndex(q=>q.u===u&&q.type===(j?'ult':'skill')); let q=btn.querySelector('.qn'); if(qi>=0){ if(!q){ q=document.createElement('span'); q.className='qn'; btn.appendChild(q); } q.textContent=qi+1; } else if(q) q.remove(); }); });
-      if(b.bossU){ $('#bossbar .bb i').style.width=(100*b.bossU.hp/b.bossU.maxHp)+'%'; } },
-    turn(list){ $('#turnbar').innerHTML=list.map(u=>`<img class="${u.side==='hero'?'':'e'}" src="assets/${u.d.icon||u.d.art||u.d.spr}">`).join(''); },
-    wave(n,t){ $('#bwave').textContent=`ด่าน ${st.name} · คลื่น ${n}/${t}`; },
-    boss(u){ const bb=$('#bossbar'); window.battle.bossU=u; bb.classList.toggle('on',!!u); if(u){ bb.querySelector('img').src='assets/'+(u.d.icon||'ui/boss_skull.webp'); bb.querySelector('b').textContent=`${u.big?'☠ BOSS':'★ ขุนพล'} ${u.name} Lv.${u.lvl}`; } }
+    refresh(){ const b=window.battle; if(!b) return; const hs=b.heroes; if(!hs[sel]||!hs[sel].alive){ const n=hs.findIndex(u=>u.alive); if(n>=0) sel=n; }
+      const u=hs[sel]; if(!u) return; const d=u.d, el=ELEM[d.el];
+      $$('#bcards .hc').forEach((c,k)=>{ const h=hs[k]; c.classList.toggle('dead',!h.alive); c.classList.toggle('sel',k===sel); c.classList.toggle('cur',b.cur===h); c.classList.toggle('ur',h.alive&&h.energy>=100);
+        c.querySelector('.h i').style.width=(100*h.hp/h.maxHp)+'%'; c.querySelector('.e i').style.width=h.energy+'%'; });
+      const A=$('#bactive'); A.querySelector('img').src='assets/'+d.art; A.querySelector('.ba-lv').textContent='Lv.'+u.lvl; A.querySelector('.ba-nm b').textContent=d.name;
+      A.querySelector('.ba-hp i').style.width=(100*u.hp/u.maxHp)+'%'; A.querySelector('.ba-hp span').textContent=`${fmt(Math.ceil(u.hp))} / ${fmt(u.maxHp)}`;
+      A.querySelector('.ba-en i').style.width=u.energy+'%'; A.querySelector('.ba-en span').textContent=Math.floor(u.energy)+'%';
+      sk.style.setProperty('--c',el.c); ul.style.setProperty('--c',el.c);
+      const si=sk.querySelector('img'), ui2=ul.querySelector('img'); const s1=skIcon(d,false), s2=skIcon(d,true); if(si.getAttribute('src')!==s1) si.src=s1; if(ui2.getAttribute('src')!==s2) ui2.src=s2;
+      sk.querySelector('em').textContent=u.skill.name; ul.querySelector('em').textContent=u.ult.name; sk.querySelector('em').style.display=ul.querySelector('em').style.display='block';
+      const c1=sk.querySelector('.cdv'), c2=ul.querySelector('.cdv'); c1.style.display=u.cd>0?'flex':'none'; c1.textContent=u.cd; c2.style.display=u.energy<100?'flex':'none'; c2.textContent=Math.floor(u.energy)+'%';
+      ul.classList.toggle('ready',u.energy>=100&&u.alive);
+      [sk,ul].forEach((btn,j)=>{ const qi=b.queue.findIndex(q=>q.u===u&&q.type===(j?'ult':'skill')); btn.classList.toggle('q',qi>=0); let q=btn.querySelector('.qn'); if(qi>=0){ if(!q){ q=document.createElement('span'); q.className='qn'; btn.appendChild(q); } q.textContent='✓'; } else if(q) q.remove(); });
+      if(b.bossU){ const bu=b.bossU; $('#bossbar .bb i').style.width=(100*bu.hp/bu.maxHp)+'%'; $('#bossbar .bt').textContent=`${fmt(Math.ceil(bu.hp))} / ${fmt(bu.maxHp)}  (${Math.ceil(100*bu.hp/bu.maxHp)}%)`; } },
+    turn(list){ $('#turncol').innerHTML=list.slice(0,5).map(u=>`<img class="${u.side==='hero'?'':'e'}" src="assets/${u.d.icon||u.d.art||u.d.spr}">`).join('');
+      const b=window.battle; if(b&&b.cur&&b.cur.side==='hero'){ const k=b.heroes.indexOf(b.cur); if(k>=0) sel=k; } },
+    wave(n,t){ $('#bwave').textContent=`บทที่ ${st.name}  ${st.ch.name.replace(/^บทที่ \d+ /,'')} · คลื่น ${n}/${t}`; },
+    boss(u){ const bb=$('#bossbar'); window.battle.bossU=u; bb.classList.toggle('on',!!u); if(u){ bb.querySelector('img').src='assets/'+(u.d.icon||'ui/boss_skull.webp'); bb.querySelector('b').textContent=`${u.big?'':'★ '}${u.name}`; bb.querySelector('.bl').textContent='Lv.'+u.lvl; } }
   };
   $('#bossbar').classList.remove('on');
   const b=window.battle=new Battle({canvas:$('#bcanvas'),team,stage:st,ui,onEnd:r=>battleEnd(r)});
-  $$('#bpanel .bc').forEach((c,k)=>{ const u=b.heroes[k];
-    c.querySelector('.sk').onclick=()=>{ Voice.unlock(); if(!u.alive) return; if(u.cd>0) return toast(`${u.skill.name} คูลดาวน์อีก ${u.cd} เทิร์น`); if(b.queue.some(q=>q.u===u)) b.queue=b.queue.filter(q=>q.u!==u); else b.queue.push({u,type:'skill'}); Voice.sfx('tap'); ui.refresh(); };
-    c.querySelector('.ult').onclick=()=>{ Voice.unlock(); if(!u.alive) return; if(u.energy<100) return toast(`ท่าไม้ตาย "${u.ult.name}" ต้องการพลัง 100%`); b.queue=b.queue.filter(q=>q.u!==u); b.queue.push({u,type:'ult'}); Voice.sfx('magic'); ui.refresh(); }; });
-  const chips=()=>{ $('#b-auto').classList.toggle('on',b.auto); $('#b-speed').textContent='x'+b.speed; };
+  $$('#bcards .hc').forEach(c=>c.onclick=()=>{ sel=+c.dataset.k; Voice.sfx('tap'); ui.refresh(); });
+  sk.onclick=()=>{ Voice.unlock(); const u=b.heroes[sel]; if(!u||!u.alive) return; if(u.cd>0) return toast(`${u.skill.name} คูลดาวน์อีก ${u.cd} เทิร์น`); if(b.queue.some(q=>q.u===u&&q.type==='skill')) b.queue=b.queue.filter(q=>q.u!==u); else { b.queue=b.queue.filter(q=>q.u!==u); b.queue.push({u,type:'skill'}); } Voice.sfx('tap'); ui.refresh(); };
+  ul.onclick=()=>{ Voice.unlock(); const u=b.heroes[sel]; if(!u||!u.alive) return; if(u.energy<100) return toast(`ท่าไม้ตาย "${u.ult.name}" ต้องการพลัง 100%`); b.queue=b.queue.filter(q=>q.u!==u); b.queue.push({u,type:'ult'}); Voice.sfx('magic'); ui.refresh(); };
+  const chips=()=>{ $('#b-auto').classList.toggle('on',b.auto); $('#b-speed').textContent='x'+b.speed; $('#b-speed').classList.toggle('on',b.speed>1); };
   $('#b-auto').onclick=()=>{ b.auto=!b.auto; localStorage.setItem('pk_auto',b.auto?'1':'0'); chips(); };
   $('#b-speed').onclick=()=>{ b.speed=b.speed>=3?1:b.speed+1; localStorage.setItem('pk_speed',b.speed); chips(); };
+  $('#b-menu').onclick=()=>$('#b-exit').click();
   $('#b-exit').onclick=()=>{ modal(`<h2>ออกจากการต่อสู้?</h2><p class="center note">จะไม่ได้รับรางวัล</p><div class="row"><button class="btn" onclick="closeModal()">สู้ต่อ</button><button class="btn gold" id="ex-y">ออก</button></div>`); $('#ex-y').onclick=()=>{ closeModal(); go('map'); }; };
+  clearInterval(_bt); _bt=setInterval(()=>{ const bb=window.battle; if(!bb||bb.over) return; const t=Math.floor((performance.now()-bb.t0)/1000); $('#b-time').textContent=String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0'); },500);
   chips(); setTimeout(()=>{ b.resize(); b.run(); },60);
 }
 function battleEnd(r){

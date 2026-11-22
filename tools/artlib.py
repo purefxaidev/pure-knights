@@ -130,3 +130,11 @@ def seamless(img, size=512):
     w = np.clip((d - 0.12) / 0.5, 0, 1)[..., None]; w = w * w * (3 - 2 * w)
     return Image.fromarray((a * w + r * (1 - w)).astype(np.uint8))
 
+
+def chroma(img):
+    """green-screen key (flat green bg)"""
+    a=np.asarray(img).astype(np.float32); r,g,b=a[...,0],a[...,1],a[...,2]
+    key=g-np.maximum(r,b); al=np.clip(1-(key-8)/12,0,1); gg=np.minimum(g,np.maximum(r,b)+6)
+    out=np.stack([r,gg,b],-1)
+    A=Image.fromarray((al*255).astype(np.uint8)).filter(ImageFilter.MinFilter(3)).filter(ImageFilter.GaussianBlur(.6))
+    im=Image.fromarray(out.clip(0,255).astype(np.uint8)).convert('RGBA'); im.putalpha(A); return im

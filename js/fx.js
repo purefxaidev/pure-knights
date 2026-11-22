@@ -76,5 +76,33 @@ const FX = (()=>{
           b.parts.push({x:sx,y:sy,vx:dx*s+rnd(-1,1),vy:dy*s+rnd(-1,1),life:1,max:32,size:rnd(8,16),color:n%2?'#ff5a1f':'#ffcf5a'}); }
         k<1?requestAnimationFrame(step):r(); }; step(); });
       b.shake=16; hitAll(b,u,sk,ts); await b.wait(300); },
+    goldspear: async(b,u,sk,ts)=>{ b.dark=.4; b.darkColor='20,10,0'; Voice.sfx('magic'); b.parts.push({k:'ring',x:u.x,y:top(b,u),life:1,max:40,size:u.hpx*.3,grow:u.hpx*.9,color:'#ffd36b',lw:8,flat:.5});
+      await b.wait(250); const n=30; for(let i=0;i<n;i++){ const t=ts[i%ts.length]; if(!t) break; const ex=t.x+rnd(-26,26), ey=top(b,t)+rnd(-26,26), sx=ex+rnd(-80,80), sy=-80, d=Math.floor(i*1.1);
+        for(let k=0;k<9;k++){ const q=k/9; b.parts.push({x:lerp(sx,ex,q),y:lerp(sy,ey,q),life:1,max:12+k*2,size:4+k*.9,color:k%2?'#fff3b0':'#ffb020',delay:d+k}); }
+        b.parts.push({k:'flashd',x:ex,y:ey,life:1,max:12,size:30,color:'#ffe9a8',delay:d+9}); }
+      await b.wait(520); b.shake=16; b.flash=.5; b.flashColor='#ffe9a8'; hitAll(b,u,sk,ts); b.tween(b,{dark:0},500); await b.wait(300); },
+    redcape: async(b,u,sk,ts)=>{ b.dark=.3; b.darkColor='40,0,0'; Voice.sfx('slash'); for(let i=0;i<sk.hits;i++){ const f=b.foes(u); if(!f.length) break; const t=f[i%f.length]; await b.dashTo(u,t);
+        b.parts.push({k:'slash',x:t.x,y:top(b,t),ang:-0.9+i*0.7,life:1,max:22,size:t.hpx*1.2,color:'#ff2a3a',lw:14});
+        for(let q=0;q<10;q++) b.parts.push({k:'petal',x:t.x,y:top(b,t),vx:rnd(-3,3),vy:rnd(-3,1),life:1,max:40,size:rnd(4,8),color:'#d81e2c',ph:rnd(0,6)});
+        b.applyHit(u,sk,t,sk.mult,true); b.shake=10; await b.wait(110); } await b.back(u); b.tween(b,{dark:0},400); },
+    sunblade: async(b,u,sk,ts)=>{ const c=enemyCenter(b,ts); Voice.sfx('magic'); b.flash=.5; b.flashColor='#fffbe0';
+      for(let i=0;i<5;i++) b.parts.push({k:'beam',x:c.x+(i-2)*b.U*.5,y:c.y+b.U*.2,w:b.U*.14,h:b.A*1.3,life:1,max:36,color:'rgba(255,240,170,.85)',delay:i*5});
+      await b.wait(360); b.parts.push({k:'ring',x:c.x,y:c.y,life:1,max:40,size:20,grow:b.W*.4,color:'#fff3b0',lw:10,flat:.35}); b.shake=16;
+      for(let i=0;i<30;i++){ const a=rnd(0,TAU); b.parts.push({k:'line',x:c.x,y:c.y-b.U*.4,a,len:rnd(60,140),life:1,max:22,color:'#fff3b0'}); }
+      hitAll(b,u,sk,ts); await b.wait(350); },
+    bluethunder: async(b,u,sk,ts)=>{ b.dark=.45; b.darkColor='0,10,40'; Voice.sfx('zap'); await b.tween(u,{sc:1.12},200);
+      for(let i=0;i<12;i++){ const t=ts[i%ts.length]; if(!t) break; b.parts.push({k:'bolt',pts:bolt(t.x+rnd(-40,40),-20,t.x,top(b,t),9,34),life:1,max:26,color:'#5aa2ff',delay:i*3}); }
+      b.parts.push({k:'slash',x:u.x+(u.dir||1)*u.hpx*.5,y:top(b,u),ang:-.5,life:1,max:26,size:u.hpx*1.4,color:'#7fc4ff',lw:16});
+      await b.wait(380); b.flash=.55; b.flashColor='#bcd8ff'; b.shake=18; hitAll(b,u,sk,ts); await b.tween(u,{sc:1},200); b.tween(b,{dark:0},500); },
+    crystal: async(b,u,sk,ts)=>{ b.dark=.5; b.darkColor='30,0,25'; Voice.sfx('magic');
+      for(let i=0;i<22;i++){ const t=ts[i%ts.length]; if(!t) break; const ex=t.x+rnd(-34,34), ey=top(b,t)+rnd(-28,28); for(let k=0;k<7;k++) b.parts.push({k:'shard',x:ex+rnd(-60,60),y:-40+k*8,vx:(ex-t.x)*.01,vy:6+k*.5,life:1,max:28,size:rnd(8,13),color:k%2?'#ff4d6e':'#ffd6e0',delay:i*2+k});
+        b.parts.push({k:'flashd',x:ex,y:ey,life:1,max:14,size:32,color:'#ff9db4',delay:i*2+12}); }
+      await b.wait(520); b.shake=16; b.flash=.45; b.flashColor='#ffd0dc'; for(const t of ts) for(let i=0;i<14;i++) b.parts.push({k:'shard',x:t.x,y:top(b,t),vx:rnd(-6,6),vy:rnd(-8,-2),life:1,max:42,size:rnd(6,12),color:'#ff5f82'});
+      hitAll(b,u,sk,ts); b.tween(b,{dark:0},500); await b.wait(300); },
+    nightbreath: async(b,u,sk,ts)=>{ b.dark=.5; b.darkColor='25,0,45'; Voice.sfx('fire'); b.shake=10; const sx=u.x-(b.land?u.hpx*.55:0), sy=u.y-u.hpx*.62; const t0=performance.now(), dur=1000/b.speed;
+      await new Promise(r=>{ const step=()=>{ for(let n=0;n<8;n++){ const t=ts[Math.floor(Math.random()*ts.length)]; if(!t) break; const dx=t.x-sx, dy=top(b,t)-sy, s=rnd(.02,.036);
+          b.parts.push({x:sx,y:sy,vx:dx*s+rnd(-1,1),vy:dy*s+rnd(-1,1),life:1,max:34,size:rnd(10,20),color:n%3?'#a94bff':(n%2?'#ff7bff':'#ffd36b')}); }
+        (performance.now()-t0)<dur?requestAnimationFrame(step):r(); }; step(); });
+      b.flash=.6; b.flashColor='#d9b3ff'; b.shake=22; for(const t of ts) b.burst(t.x,top(b,t),'#c57bff',26,6); hitAll(b,u,sk,ts); b.tween(b,{dark:0},600); await b.wait(350); },
   };
 })();

@@ -1,5 +1,75 @@
 [
  {
+  "key": "seline_ult",
+  "text": "ห่าหอกสุริยัน! จงสยบต่อข้า!",
+  "voice": "Vindemiatrix",
+  "style": "สง่างาม เยือกเย็น เด็ดขาด",
+  "pri": 0
+ },
+ {
+  "key": "seline_intro",
+  "text": "ข้าคือราชินีแห่งนิลและทอง ใครจะขวางทางข้า?",
+  "voice": "Vindemiatrix",
+  "style": "สง่างาม เยือกเย็น เด็ดขาด",
+  "pri": 1
+ },
+ {
+  "key": "veronica_ult",
+  "text": "พายุผลึกสีเลือด จงโปรยปราย!",
+  "voice": "Laomedeia",
+  "style": "นุ่มนวล อ่อนหวาน ลึกลับ",
+  "pri": 0
+ },
+ {
+  "key": "veronica_intro",
+  "text": "ท่านมาแล้วหรือ... ข้ารอท่านอยู่นะ",
+  "voice": "Laomedeia",
+  "style": "นุ่มนวล อ่อนหวาน ลึกลับ",
+  "pri": 1
+ },
+ {
+  "key": "seraphina_ult",
+  "text": "ดาบแห่งแสงสวรรค์ จงพิพากษา!",
+  "voice": "Autonoe",
+  "style": "องอาจ สุภาพ น่าเชื่อถือ",
+  "pri": 0
+ },
+ {
+  "key": "seraphina_intro",
+  "text": "อัศวินแห่งแสง พร้อมปกป้องทุกคน!",
+  "voice": "Autonoe",
+  "style": "องอาจ สุภาพ น่าเชื่อถือ",
+  "pri": 1
+ },
+ {
+  "key": "lucius_ult",
+  "text": "ผ้าคลุมแดงพิฆาต!",
+  "voice": "Umbriel",
+  "style": "สุขุม เรียบเฉย แต่ร้อนแรงข้างใน",
+  "pri": 0
+ },
+ {
+  "key": "lucius_intro",
+  "text": "ผ้าคลุมสีเลือดนี้ ไม่เคยแปดเปื้อนความพ่ายแพ้",
+  "voice": "Umbriel",
+  "style": "สุขุม เรียบเฉย แต่ร้อนแรงข้างใน",
+  "pri": 1
+ },
+ {
+  "key": "raven_ult",
+  "text": "มหาดาบอสุนี จงผ่าฟ้า!",
+  "voice": "Algieba",
+  "style": "เย็นชา นิ่งขรึม เสียงทุ้ม",
+  "pri": 0
+ },
+ {
+  "key": "raven_intro",
+  "text": "ดาบข้า... พร้อมแล้ว",
+  "voice": "Algieba",
+  "style": "เย็นชา นิ่งขรึม เสียงทุ้ม",
+  "pri": 1
+ },
+ {
   "key": "tank_ult",
   "text": "ราชสีห์ทองคำ จงพิทักษ์พวกพ้อง!",
   "voice": "Kore",

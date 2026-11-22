@@ -20,42 +20,44 @@
     <button id="tb-back" class="tb-back" data-go="home" aria-label="กลับ">‹</button>
     <div id="tb-title"></div>
     <div class="resbar">
-      <div class="res"><span class="ri">⚡</span><b id="r-stam">150/150</b></div>
-      <div class="res"><img src="assets/spr/item_gold.webp" alt=""><b id="r-gold">0</b><button class="plus" data-go="quests">+</button></div>
-      <div class="res"><img src="assets/spr/item_gem.webp" alt=""><b id="r-gems">0</b><button class="plus" data-go="summon">+</button></div>
-      <div class="res pure" data-go="wallet"><img src="assets/ui/coin_pure.webp" alt=""><b id="r-pure">0</b><button class="plus" data-go="wallet">+</button></div>
+      <div class="res"><span class="ic sm" style="--m:url(../assets/ui/ic_bolt.webp)"><img src="assets/ui/ic_bolt.webp" alt=""></span><b id="r-stam">150/150</b></div>
+      <div class="res"><span class="ic sm" style="--m:url(../assets/ui/ic_coins.webp)"><img src="assets/ui/ic_coins.webp" alt=""></span><b id="r-gold">0</b><button class="plus" data-go="quests">+</button></div>
+      <div class="res"><span class="ic sm" style="--m:url(../assets/ui/ic_ruby.webp)"><img src="assets/ui/ic_ruby.webp" alt=""></span><b id="r-gems">0</b><button class="plus" data-go="summon">+</button></div>
+      <div class="res pure" data-go="wallet"><span class="ic sm" style="--m:url(../assets/ui/ic_pure.webp)"><img src="assets/ui/ic_pure.webp" alt=""></span><b id="r-pure">0</b><button class="plus" data-go="wallet">+</button></div>
     </div>
-    <div class="tb-icons"><button class="ib" data-soon="กล่องจดหมาย">✉️</button><button class="ib" data-soon="แชท">💬</button><button class="ib set" data-go="settings" aria-label="ตั้งค่า"></button></div>
+    <div class="tb-icons"><button class="ib" data-soon="กล่องจดหมาย"><span class="ic " style="--m:url(../assets/ui/ic_mail.webp)"><img src="assets/ui/ic_mail.webp" alt=""></span></button><button class="ib" data-soon="แชท"><span class="ic " style="--m:url(../assets/ui/ic_chat.webp)"><img src="assets/ui/ic_chat.webp" alt=""></span></button><button class="ib set" data-go="settings" aria-label="ตั้งค่า"><span class="ic " style="--m:url(../assets/ui/ic_gear.webp)"><img src="assets/ui/ic_gear.webp" alt=""></span></button></div>
   </header>
 
   <!-- LOBBY -->
   <section id="home" class="screen active">
-    <div class="lobby-bg"></div><div id="lobby-team"></div><div class="lobby-shade"></div>
+    <div class="lobby-bg"></div><div class="lobby-shade"></div><div class="petals"></div>
     <div class="player" data-go="heroes"><div class="avatar"><img id="pl-ava" alt=""></div><div><b id="pl-name">ผู้กล้าแห่งเพียว</b><div class="pl-sub"><span id="pl-lv">Lv.1</span><span class="vip">VIP 0</span></div><div class="plpow" id="pl-pow"></div></div></div>
-    <div class="logo"><div class="l1">PURE KNIGHTS</div><div class="l2">ขุนพลแห่งตำนาน</div></div>
     <div class="side-menu">
-      <button data-soon="อันดับ"><span>🏆</span>อันดับ</button><button data-soon="เพื่อน"><span>👥</span>เพื่อน</button>
-      <button data-soon="กิลด์"><span>🏰</span>กิลด์</button><button data-go="wallet"><span>💱</span>แลกเปลี่ยน</button>
+      <button data-soon="อันดับ"><span class="ic " style="--m:url(../assets/ui/ic_crown.webp)"><img src="assets/ui/ic_crown.webp" alt=""></span>อันดับ</button><button data-soon="เพื่อน"><span class="ic " style="--m:url(../assets/ui/ic_friends.webp)"><img src="assets/ui/ic_friends.webp" alt=""></span>เพื่อน</button>
+      <button data-soon="กิลด์"><span class="ic " style="--m:url(../assets/ui/ic_guild.webp)"><img src="assets/ui/ic_guild.webp" alt=""></span>กิลด์</button><button data-go="wallet"><span class="ic " style="--m:url(../assets/ui/ic_exchange.webp)"><img src="assets/ui/ic_exchange.webp" alt=""></span>แลกเปลี่ยน</button>
     </div>
-    <div class="events">
-      <button data-soon="กิจกรรม"><span>🎉</span>กิจกรรม<i class="dot on"></i></button>
-      <button id="ev-checkin"><span>📅</span>เช็กอิน<i class="dot" id="ci-dot"></i></button>
-      <button data-soon="พาส"><span>🎫</span>พาส</button>
-      <button data-go="quests"><span>📜</span>ภารกิจ<i class="dot" id="q-dot"></i></button>
+    <div class="lob-right">
+      <div class="logo"><img src="assets/logo.webp" alt="PURE Knights" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="l1" style="display:none">PURE Knights</div></div>
+      <button class="rateup" data-go="summon"><img id="ru-art" alt=""><i class="arr l">‹</i><i class="arr r">›</i><span class="ribbon">Rate Up!</span><div class="ru-txt"><small id="ru-tag">อัญเชิญพิเศษ</small><b id="ru-name"></b><span class="ru-st">★★★★★</span></div></button>
+      <div class="events">
+        <button data-soon="กิจกรรม"><span class="ic " style="--m:url(../assets/ui/ic_gift.webp)"><img src="assets/ui/ic_gift.webp" alt=""></span>กิจกรรม<i class="dot on"></i></button>
+        <button id="ev-checkin"><span class="ic " style="--m:url(../assets/ui/ic_calendar.webp)"><img src="assets/ui/ic_calendar.webp" alt=""></span>เช็กอิน<i class="dot" id="ci-dot"></i></button>
+        <button data-soon="พาส"><span class="ic " style="--m:url(../assets/ui/ic_pass.webp)"><img src="assets/ui/ic_pass.webp" alt=""></span>พาส<i class="dot on"></i></button>
+        <button data-go="quests"><span class="ic " style="--m:url(../assets/ui/ic_quest.webp)"><img src="assets/ui/ic_quest.webp" alt=""></span>ภารกิจ<i class="dot" id="q-dot"></i></button>
+      </div>
+      <div class="modes">
+        <button class="mode m-story" data-go="map"><b>เนื้อเรื่อง</b><small id="md-prog"></small></button>
+        <button class="mode m-special" data-go="map" data-arg="boss"><b>พิเศษ</b><small>บอสยักษ์</small></button>
+        <button class="mode m-arena" data-soon="อารีน่า"><b>อารีน่า</b><small>เร็วๆ นี้</small></button>
+        <button class="mode m-raid" data-soon="เรด"><b>เรด</b><small>เร็วๆ นี้</small></button>
+      </div>
+      <button class="start-btn" data-go="map"><span class="sw"></span><img class="sx" src="assets/ui/ic_sword.webp" alt=""><span>เริ่มผจญภัย</span></button>
     </div>
-    <button class="rateup" data-go="summon"><img id="ru-art" alt=""><div class="ru-txt"><b>RATE UP!</b><span id="ru-name"></span><small>อัญเชิญเลย ›</small></div></button>
-    <div class="modes">
-      <button class="mode m-story" data-go="map"><b>เนื้อเรื่อง</b><small id="md-prog"></small></button>
-      <button class="mode m-special" data-go="map" data-arg="boss"><b>พิเศษ</b><small>บอสยักษ์</small></button>
-      <button class="mode m-arena" data-soon="อารีน่า"><b>อารีน่า</b><small>เร็วๆ นี้</small></button>
-      <button class="mode m-raid" data-soon="เรด"><b>เรด</b><small>เร็วๆ นี้</small></button>
-    </div>
-    <button class="start-btn" data-go="map">เริ่มผจญภัย</button>
     <nav class="bottom-bar">
-      <button data-go="heroes"><span>🦸</span>ตัวละคร</button><button data-go="heroes" data-arg="team"><span>🛡️</span>จัดทีม</button>
-      <button data-soon="อุปกรณ์"><span>⚔️</span>อุปกรณ์</button><button data-go="heroes"><span>⬆️</span>อัปเกรด</button>
-      <button data-go="summon"><span>💎</span>อัญมณี</button><button data-go="heroes" data-arg="skill"><span>📘</span>สกิล</button>
-      <button data-go="collection"><span>🖼️</span>คอลเลกชัน</button>
+      <button data-go="heroes"><span class="ic " style="--m:url(../assets/ui/ic_helmet.webp)"><img src="assets/ui/ic_helmet.webp" alt=""></span>ตัวละคร<i class="dot on"></i></button><button data-go="heroes" data-arg="team"><span class="ic " style="--m:url(../assets/ui/ic_chess.webp)"><img src="assets/ui/ic_chess.webp" alt=""></span>จัดทีม</button>
+      <button data-soon="อุปกรณ์"><span class="ic " style="--m:url(../assets/ui/ic_sword.webp)"><img src="assets/ui/ic_sword.webp" alt=""></span>อุปกรณ์</button><button data-go="heroes"><span class="ic " style="--m:url(../assets/ui/ic_upgrade.webp)"><img src="assets/ui/ic_upgrade.webp" alt=""></span>อัปเกรด</button>
+      <button data-go="summon"><span class="ic " style="--m:url(../assets/ui/ic_gem.webp)"><img src="assets/ui/ic_gem.webp" alt=""></span>อัญมณี<i class="dot on"></i></button><button data-go="heroes" data-arg="skill"><span class="ic " style="--m:url(../assets/ui/ic_star.webp)"><img src="assets/ui/ic_star.webp" alt=""></span>สกิล<i class="dot on"></i></button>
+      <button data-go="collection"><span class="ic " style="--m:url(../assets/ui/ic_book.webp)"><img src="assets/ui/ic_book.webp" alt=""></span>คอลเลกชัน<i class="dot on"></i></button>
     </nav>
   </section>
 
@@ -74,10 +76,17 @@
 
   <section id="battle" class="screen">
     <canvas id="bcanvas"></canvas>
-    <div id="bhud"><div id="bwave"></div><div id="turnbar"></div>
-      <div class="bbtns"><button id="b-auto" class="chip">AUTO</button><button id="b-speed" class="chip">x1</button><button id="b-exit" class="chip">✕</button></div></div>
-    <div id="bossbar"><img alt=""><div><b></b><div class="bb"><i></i></div></div></div>
-    <div id="bpanel"></div>
+    <div id="bhud">
+      <div class="b-left"><div class="b-logo"><img src="assets/logo.webp" alt=""></div><div class="b-info"><div id="bwave"></div><div class="b-sub"><span class="b-stars">★★★</span><span class="b-timer">⏱ <b id="b-time">00:00</b></span></div></div></div>
+      <div class="bbtns"><button id="b-menu" class="rb" aria-label="เมนู"><i class="bars"></i></button><button id="b-speed" class="rb">x1</button><button id="b-auto" class="rb">Auto</button><button id="b-exit" class="rb" aria-label="ออก">✕</button></div>
+    </div>
+    <div id="turncol"></div><div id="turnbar" style="display:none"></div>
+    <div id="bossbar"><div class="bm"><img alt=""></div><div class="bi"><div class="bn"><b></b><em class="bl"></em></div><div class="bb"><i></i><span class="bt"></span></div><div class="bdebuf"><u></u><u></u><u></u><u></u><u></u><u></u></div></div></div>
+    <div id="bpanel">
+      <div id="bactive"><div class="ba-ava"><img alt=""></div><div class="ba-info"><div class="ba-nm"><span class="ba-lv"></span><b></b></div><div class="ba-hp"><i></i><span></span></div><div class="ba-en"><i></i><span></span></div></div></div>
+      <div id="bskills"><button class="bsk sk"><img alt=""><span class="cdv"></span><em></em></button><button class="bsk ult"><img alt=""><span class="cdv"></span><em></em></button></div>
+      <div id="bcards"></div>
+    </div>
   </section>
 </div>
 

@@ -68,6 +68,27 @@ const HEROES = {
     skill:{name:'เสน่ห์มัดใจ (Charm)',kind:'hit',mult:2.0,charm:0.6,cd:2},
     ult:{name:'พลังปีศาจ: ยั่วยวนราตรี',kind:'aoe',mult:2.4,charm:0.35,lifesteal:0.25,fx:'charm'},
     lines:{intro:'อยากเล่นกับข้าหรือ... ระวังจะถอนตัวไม่ขึ้นนะ',skill:'มองตาข้าสิ... แล้วยอมแพ้ซะ',ult:'พลังปีศาจแห่งราตรี! ตกอยู่ใต้มนตร์เสน่ห์ของข้าซะ!',win:'ฮึๆ ง่ายเกินไปแล้วล่ะ'}}),
+  // ===== v3: heroes from the lobby reference =====
+  seline:H({name:'เซลีน',tier:'UR',role:'fighter',el:'dark',hp:1500,atk:200,def:82,spd:108,voice:'Vindemiatrix',style:'สง่างาม เยือกเย็น เด็ดขาด',
+    skill:{name:'หอกทองพิฆาต',kind:'multi',hits:3,mult:0.95,cd:2},
+    ult:{name:'ราชินีนิลทอง: ห่าหอกสุริยัน',kind:'aoe',mult:2.7,lifesteal:0.15,fx:'goldspear'},
+    lines:{intro:'ข้าคือราชินีแห่งนิลและทอง ใครจะขวางทางข้า?',skill:'หอกทอง จงทะลวง!',ult:'ห่าหอกสุริยัน! จงสยบต่อข้า!',win:'ชัยชนะเป็นของเรา',capture:'ข้ายอมรับใช้ผู้ที่คู่ควรเท่านั้น'}}),
+  veronica:H({name:'เวโรนิก้า',tier:'UR',role:'mage',el:'water',hp:1250,atk:195,def:64,spd:112,voice:'Laomedeia',style:'นุ่มนวล อ่อนหวาน ลึกลับ',
+    skill:{name:'ผลึกโลหิตจันทรา',kind:'hit',mult:2.2,stun:0.45,cd:2},
+    ult:{name:'สวรรค์ผลึกแดง: พายุนิรันดร์',kind:'aoe',mult:2.6,stun:0.3,lifesteal:0.2,fx:'crystal'},
+    lines:{intro:'ท่านมาแล้วหรือ... ข้ารอท่านอยู่นะ',skill:'ผลึกแห่งจันทรา จงส่องแสง',ult:'พายุผลึกสีเลือด จงโปรยปราย!',win:'ขอบคุณที่อยู่เคียงข้างข้านะ'}}),
+  seraphina:H({name:'เซราฟิน่า',tier:'SSR',role:'tank',el:'light',hp:1550,atk:150,def:100,spd:100,voice:'Autonoe',style:'องอาจ สุภาพ น่าเชื่อถือ',
+    skill:{name:'โล่ขาวทองพิทักษ์',kind:'shield',pct:0.32,taunt:2,cd:3},
+    ult:{name:'ดาบพิพากษาแสงสวรรค์',kind:'aoe',mult:1.9,teamShield:0.14,fx:'sunblade'},
+    lines:{intro:'อัศวินแห่งแสง พร้อมปกป้องทุกคน!',skill:'อยู่ข้างหลังข้า!',ult:'ดาบแห่งแสงสวรรค์ จงพิพากษา!',win:'แสงสว่างจะชนะเสมอ'}}),
+  lucius:H({name:'ลูเซียส',tier:'SR',role:'fighter',el:'fire',hp:1300,atk:150,def:72,spd:106,voice:'Umbriel',style:'สุขุม เรียบเฉย แต่ร้อนแรงข้างใน',
+    skill:{name:'กวัดทวนโลหิต',kind:'aoe',mult:1.1,burn:2,cd:3},
+    ult:{name:'ผ้าคลุมแดงพิฆาต',kind:'multi',hits:4,mult:0.95,fx:'redcape'},
+    lines:{intro:'ผ้าคลุมสีเลือดนี้ ไม่เคยแปดเปื้อนความพ่ายแพ้',skill:'ทวนข้า ไม่เคยพลาด!',ult:'ผ้าคลุมแดงพิฆาต!',win:'เรียบร้อย'}}),
+  raven:H({name:'เรเวน',tier:'SSR',role:'fighter',el:'storm',hp:1380,atk:178,def:78,spd:110,voice:'Algieba',style:'เย็นชา นิ่งขรึม เสียงทุ้ม',
+    skill:{name:'คมดาบอสนี',kind:'hit',mult:2.4,stun:0.3,cd:2},
+    ult:{name:'มหาดาบอสุนีสีคราม',kind:'aoe',mult:2.3,stun:0.3,fx:'bluethunder'},
+    lines:{intro:'ดาบข้า... พร้อมแล้ว',skill:'ฟาดลง!',ult:'มหาดาบอสุนี จงผ่าฟ้า!',win:'จบแล้ว'}}),
   // ===== Generals (ขุนพล) — capture only =====
   tiger:H({name:'ขุนพลพยัคฆ์กระดูก',tier:'UR',role:'general',general:true,el:'fire',hp:1600,atk:170,def:85,spd:98,voice:'Algenib',style:'ดุร้าย คำราม',
     skill:{name:'ขวานผ่าศิลา',kind:'hit',mult:2.4,cd:2},
@@ -100,6 +121,8 @@ const MONS = {
     ult:{name:'รากพฤกษาพิโรธ',kind:'aoe',mult:1.7,stun:0.25,fx:'roots'}, lines:{intro:'ผู้บุกรุกป่าศักดิ์สิทธิ์... จงกลายเป็นปุ๋ย!',ult:'รากพฤกษาพิโรธ!'}},
   firedragon:{name:'มังกรเพลิงอเวจี',spr:'spr/boss_firedragon.webp',art:'img/firedragon_art.webp',hp:6400,atk:175,def:95,spd:88,h:1.8,el:'fire',boss:true,big:true,voice:'Rasalgethi',style:'คำรามกึกก้อง',
     ult:{name:'ลมหายใจอเวจี',kind:'aoe',mult:1.9,burn:3,fx:'firebreath'}, lines:{intro:'มนุษย์ตัวจ้อย... เปลวไฟของข้าจะเผาเจ้าเป็นเถ้า!',ult:'ลมหายใจแห่งอเวจี!'}},
+  nightdragon:{name:'มังกรรัตติกาล วาเลอร์ธ',spr:'spr/boss_nightdragon.webp',art:'img/nightdragon_art.webp',icon:'img/nightdragon_icon.webp',faceL:true,hp:9200,atk:200,def:115,spd:94,h:2.3,el:'dark',boss:true,big:true,voice:'Schedar',style:'ทุ้มต่ำ กึกก้อง น่าสะพรึง',
+    ult:{name:'ลมหายใจรัตติกาล',kind:'aoe',mult:2.1,stun:0.25,fx:'nightbreath'}, lines:{intro:'ราตรีอันเป็นนิรันดร์... จงจมลงในเงามืดของข้า!',ult:'ลมหายใจรัตติกาล!'}},
   crystalking:{name:'จักรพรรดิผลึกทมิฬ',spr:'spr/mon_boss.webp',art:'spr/mon_boss.webp',hp:7600,atk:190,def:110,spd:92,h:1.6,el:'water',boss:true,big:true,voice:'Schedar',style:'เย็นชา สูงส่ง',
     ult:{name:'มังกรผลึกนิรันดร์',kind:'aoe',mult:2.0,stun:0.3,fx:'icedragon'}, lines:{intro:'ปราสาทแห่งนี้ ไม่มีผู้ใดออกไปได้!',ult:'มังกรผลึกนิรันดร์!'}},
 };
@@ -107,7 +130,7 @@ for(const [id,m] of Object.entries(MONS)) m.id=id;
 const CHAPTERS = [
   {name:'บทที่ 1 ป่าแห่งปฐมบท',mons:['slime','rabbit','wolf','mushroom'],boss:'treant',general:'tiger',bg:'bg/bgL_forest.webp'},
   {name:'บทที่ 2 หุบผาทะเลทราย',mons:['scorpion','mummy','wolf','mushroom'],boss:'firedragon',general:'witch',bg:'bg/bgL_desert.webp'},
-  {name:'บทที่ 3 ปราสาทผลึกทมิฬ',mons:['yeti','mummy','scorpion','boss'],boss:'crystalking',general:'demon',bg:'bg/bgL_castle.webp'},
+  {name:'บทที่ 3 ปราสาทผลึกทมิฬ',mons:['yeti','mummy','scorpion','boss'],boss:'nightdragon',general:'demon',bg:'bg/bgL_ruins.webp'},
 ];
 // map nodes: landscape world map (x,y fractions) and portrait map
 const MAP_NODES_L = [[.07,.78],[.13,.70],[.19,.65],[.25,.60],[.31,.55],[.37,.50],[.43,.51],[.49,.57],[.54,.60],[.60,.57],[.66,.54],[.72,.50],[.77,.44],[.82,.36],[.87,.27]];
@@ -133,7 +156,7 @@ const STORY = {
   7:[{w:'firedragon',t:'มนุษย์ตัวจ้อย... เปลวไฟของข้าจะเผาเจ้าเป็นเถ้า!'},{w:'flame',t:'ไฟของเจ้าเทียบไฟในใจข้าไม่ได้หรอก!'}],
   9:[{w:'witch',t:'ราตรีนี้เป็นของข้า... พวกเจ้าจะหลับใหลไปตลอดกาล'},{w:'assassin',t:'ความมืด... คือบ้านของข้า'}],
   10:[{w:'narrator',t:'ปราสาทผลึกทมิฬตระหง่านอยู่เบื้องหน้า ที่นั่นจอมมารรอคอยอยู่'},{w:'valkyrie',t:'ในนามแห่งสวรรค์ เราจะยุติความมืดนี้!'}],
-  12:[{w:'crystalking',t:'ปราสาทแห่งนี้ ไม่มีผู้ใดออกไปได้!'},{w:'succubus',t:'ฮึๆ ท่านจักรพรรดิดูเครียดจังนะ ให้ข้าช่วยผ่อนคลายไหม'}],
+  12:[{w:'nightdragon',t:'ราตรีอันเป็นนิรันดร์... จงจมลงในเงามืดของข้า!'},{w:'succubus',t:'ฮึๆ ท่านจักรพรรดิดูเครียดจังนะ ให้ข้าช่วยผ่อนคลายไหม'}],
   14:[{w:'demon',t:'เลือดของพวกเจ้า จะหล่อเลี้ยงดาบข้า!'},{w:'tank',t:'นี่คือการต่อสู้ครั้งสุดท้าย ทุกคน สู้สุดใจ!'}],
 };
 const QUESTS = [
