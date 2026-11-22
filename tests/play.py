@@ -19,7 +19,7 @@ async def run(p, name):
     pg.on('console', lambda m: errs.append(m.text) if m.type=='error' else None)
     pg.on('pageerror', lambda e: errs.append('PAGEERROR '+str(e)))
     await pg.goto(URL); await pg.wait_for_timeout(2500)
-    await pg.evaluate("localStorage.setItem('pk_speed','3');localStorage.setItem('pk_auto','1');localStorage.setItem('pk_voice','off');localStorage.setItem('pk_ultvid','off')")
+    await pg.evaluate("localStorage.setItem('pk_speed','3');localStorage.setItem('pk_auto','1');localStorage.setItem('pk_voice','off');localStorage.setItem('pk_ultvid','off'); const S=PK.S; S.team=['seline','lucius','seraphina','raven','veronica']; for(const id of S.team) S.roster[id]=S.roster[id]||{lvl:1,stars:HEROES[id].rar,shards:0,sk:[1,1]}; PK.save();")
     await pg.screenshot(path=o+'01_lobby.png'); p0 = await pg.evaluate('PK.S.pure')
     await pg.click('.start-btn', force=True); await pg.wait_for_timeout(900); await pg.screenshot(path=o+'02_map.png')
     await pg.click('.node.current', force=True); await pg.wait_for_timeout(400); await pg.screenshot(path=o+'03_stage.png')

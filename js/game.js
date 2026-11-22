@@ -6,12 +6,15 @@ const fmt=n=>(+n).toLocaleString('th-TH',{maximumFractionDigits:2});
 const SAVE_KEY='pk_save_v1', STAM_MAX=150, STAM_COST=6, STAM_REGEN_MS=120000;
 let S;
 const newEntry=(id)=>({lvl:1,stars:HEROES[id].rar,shards:0,sk:[1,1]});
-function newSave(){ const r={}; ['tank','fighter','support','marksman'].forEach(id=>r[id]=newEntry(id));
-  return {v:2,pure:0,gems:600,gold:5000,talisman:1,books:5,cleared:0,stam:STAM_MAX,stamT:Date.now(),exp:0,roster:r,team:['tank','fighter','marksman','support'],
+const STARTER=['seline','lucius','seraphina','raven','veronica'];
+function newSave(){ const r={}; STARTER.forEach(id=>r[id]=newEntry(id));
+  return {v:3,pure:0,gems:600,gold:5000,talisman:1,books:5,cleared:0,stam:STAM_MAX,stamT:Date.now(),exp:0,roster:r,team:STARTER.slice(),
     q:{date:'',prog:{},claimed:{}},pureDay:{date:'',amt:0},hist:[],wallet:'',checkin:'',storySeen:{},stats:{wins:0,captures:0,battles:0}}; }
 function migrate(o){ if(!o) return null; if(o.v===1){ o.v=2; o.books=o.books||5; o.stam=STAM_MAX; o.stamT=Date.now(); o.exp=(o.stats?.wins||0)*20; o.checkin=''; o.storySeen={};
     for(const id of Object.keys(o.roster)){ if(!HEROES[id]){ delete o.roster[id]; continue; } const e=o.roster[id]; e.sk=e.sk||[1,1]; e.stars=Math.max(e.stars,HEROES[id].rar); } o.team=o.team.filter(id=>o.roster[id]); }
-  return o.v===2?o:null; }
+  if(o.v===2){ o.v=3; STARTER.forEach(id=>{ if(!o.roster[id]) o.roster[id]=newEntry(id); });
+    const old=['tank','fighter','marksman','support']; if(o.team&&o.team.length&&o.team.every(id=>old.includes(id))) o.team=STARTER.slice(); }
+  return (o.v===2||o.v===3)?o:null; }
 function load(){ try{ S=migrate(JSON.parse(localStorage.getItem(SAVE_KEY))); }catch(e){ S=null; } if(!S) S=newSave(); dailyReset(); regen(); save(); }
 function save(){ localStorage.setItem(SAVE_KEY,JSON.stringify(S)); renderTop(); }
 function regen(){ const now=Date.now(); if(S.stam>=STAM_MAX){ S.stamT=now; return; } const n=Math.floor((now-S.stamT)/STAM_REGEN_MS); if(n>0){ S.stam=Math.min(STAM_MAX,S.stam+n); S.stamT+=n*STAM_REGEN_MS; } }
@@ -106,13 +109,14 @@ function playStory(i,done){ const lines=STORY[i]; if(!lines||S.storySeen[i]) ret
 // ---------- battle ----------
 const SK_BY_EL={fire:'flame',water:'ice',wood:'lotus',light:'spear',dark:'slash',storm:'orb'};
 const skIcon=(d,ult)=>'assets/ui/sk_'+(ult?(d.el==='dark'?'circle':d.el==='storm'?'orb':d.ult&&d.ult.teamShield?'shield':SK_BY_EL[d.el]||'circle'):(d.skill&&d.skill.kind==='shield'?'shield':SK_BY_EL[d.el]||'orb'))+'.webp';
+const sk2Icon=(d)=>{ const s=d.skill2||{}; return 'assets/ui/sk_'+(s.kind==='shield'?'shield':s.kind==='heal'?'orb':s.kind==='aoe'?'circle':'slash')+'.webp'; };
 let _bt=null;
 function startBattle(i){
   if(!S.team.length) return toast('จัดทีมก่อนนะ');
   go('battle'); const st=stageInfo(i);
   const team=S.team.map(id=>({id,lvl:S.roster[id].lvl,stars:S.roster[id].stars,sk:S.roster[id].sk}));
   $('#bcards').innerHTML=team.map((h,k)=>{ const d=HEROES[h.id]; return `<div class="hc" data-k="${k}" style="--tc:${TIERS[d.tier].c}"><img src="assets/${d.icon}"><span class="rdy"></span><div class="h"><i></i></div><div class="e"><i></i></div></div>`; }).join('');
-  let sel=0; const sk=$('#bskills .sk'), ul=$('#bskills .ult');
+  let sel=0; const atk=$('#bskills .atk'), sk=$('#bskills .sk'), sk2=$('#bskills .sk2'), ul=$('#bskills .ult');
   const ui={
     refresh(){ const b=window.battle; if(!b) return; const hs=b.heroes; if(!hs[sel]||!hs[sel].alive){ const n=hs.findIndex(u=>u.alive); if(n>=0) sel=n; }
       const u=hs[sel]; if(!u) return; const d=u.d, el=ELEM[d.el];
@@ -121,12 +125,17 @@ function startBattle(i){
       const A=$('#bactive'); A.querySelector('img').src='assets/'+d.art; A.querySelector('.ba-lv').textContent='Lv.'+u.lvl; A.querySelector('.ba-nm b').textContent=d.name;
       A.querySelector('.ba-hp i').style.width=(100*u.hp/u.maxHp)+'%'; A.querySelector('.ba-hp span').textContent=`${fmt(Math.ceil(u.hp))} / ${fmt(u.maxHp)}`;
       A.querySelector('.ba-en i').style.width=u.energy+'%'; A.querySelector('.ba-en span').textContent=Math.floor(u.energy)+'%';
-      sk.style.setProperty('--c',el.c); ul.style.setProperty('--c',el.c);
-      const si=sk.querySelector('img'), ui2=ul.querySelector('img'); const s1=skIcon(d,false), s2=skIcon(d,true); if(si.getAttribute('src')!==s1) si.src=s1; if(ui2.getAttribute('src')!==s2) ui2.src=s2;
-      sk.querySelector('em').textContent=u.skill.name; ul.querySelector('em').textContent=u.ult.name; sk.querySelector('em').style.display=ul.querySelector('em').style.display='block';
-      const c1=sk.querySelector('.cdv'), c2=ul.querySelector('.cdv'); c1.style.display=u.cd>0?'flex':'none'; c1.textContent=u.cd; c2.style.display=u.energy<100?'flex':'none'; c2.textContent=Math.floor(u.energy)+'%';
+      [atk,sk,sk2,ul].forEach(btn=>btn.style.setProperty('--c',el.c));
+      const setI=(btn,src)=>{ const im=btn.querySelector('img'); if(im.getAttribute('src')!==src) im.src=src; };
+      setI(atk,'assets/ui/sk_slash.webp'); setI(sk,skIcon(d,false)); setI(sk2,sk2Icon(d)); setI(ul,skIcon(d,true));
+      atk.querySelector('em').textContent='โจมตี'; sk.querySelector('em').textContent=u.skill.name; sk2.querySelector('em').textContent=u.skill2.name; ul.querySelector('em').textContent=u.ult.name;
+      [atk,sk,sk2,ul].forEach(b=>b.querySelector('em').style.display='block');
+      const c1=sk.querySelector('.cdv'), c2s=sk2.querySelector('.cdv'), cU=ul.querySelector('.cdv');
+      c1.style.display=u.cd>0?'flex':'none'; c1.textContent=u.cd;
+      c2s.style.display=u.cd2>0?'flex':'none'; c2s.textContent=u.cd2;
+      cU.style.display=u.energy<100?'flex':'none'; cU.textContent=Math.floor(u.energy)+'%';
       ul.classList.toggle('ready',u.energy>=100&&u.alive);
-      [sk,ul].forEach((btn,j)=>{ const qi=b.queue.findIndex(q=>q.u===u&&q.type===(j?'ult':'skill')); btn.classList.toggle('q',qi>=0); let q=btn.querySelector('.qn'); if(qi>=0){ if(!q){ q=document.createElement('span'); q.className='qn'; btn.appendChild(q); } q.textContent='✓'; } else if(q) q.remove(); });
+      [['atk',atk],['skill',sk],['skill2',sk2],['ult',ul]].forEach(([ty,btn])=>{ const qi=b.queue.findIndex(q=>q.u===u&&q.type===ty); btn.classList.toggle('q',qi>=0); let q=btn.querySelector('.qn'); if(qi>=0){ if(!q){ q=document.createElement('span'); q.className='qn'; btn.appendChild(q); } q.textContent='✓'; } else if(q) q.remove(); });
       if(b.bossU){ const bu=b.bossU; $('#bossbar .bb i').style.width=(100*bu.hp/bu.maxHp)+'%'; $('#bossbar .bt').textContent=`${fmt(Math.ceil(bu.hp))} / ${fmt(bu.maxHp)}  (${Math.ceil(100*bu.hp/bu.maxHp)}%)`; } },
     turn(list){ $('#turncol').innerHTML=list.slice(0,5).map(u=>`<img class="${u.side==='hero'?'':'e'}" src="assets/${u.d.icon||u.d.art||u.d.spr}">`).join('');
       const b=window.battle; if(b&&b.cur&&b.cur.side==='hero'){ const k=b.heroes.indexOf(b.cur); if(k>=0) sel=k; } },
@@ -136,7 +145,10 @@ function startBattle(i){
   $('#bossbar').classList.remove('on');
   const b=window.battle=new Battle({canvas:$('#bcanvas'),team,stage:st,ui,onEnd:r=>battleEnd(r)});
   $$('#bcards .hc').forEach(c=>c.onclick=()=>{ sel=+c.dataset.k; Voice.sfx('tap'); ui.refresh(); });
-  sk.onclick=()=>{ Voice.unlock(); const u=b.heroes[sel]; if(!u||!u.alive) return; if(u.cd>0) return toast(`${u.skill.name} คูลดาวน์อีก ${u.cd} เทิร์น`); if(b.queue.some(q=>q.u===u&&q.type==='skill')) b.queue=b.queue.filter(q=>q.u!==u); else { b.queue=b.queue.filter(q=>q.u!==u); b.queue.push({u,type:'skill'}); } Voice.sfx('tap'); ui.refresh(); };
+  const queue=(type,ok,msg)=>{ Voice.unlock(); const u=b.heroes[sel]; if(!u||!u.alive) return; if(!ok(u)) return toast(msg(u)); if(b.queue.some(q=>q.u===u&&q.type===type)) b.queue=b.queue.filter(q=>q.u!==u); else { b.queue=b.queue.filter(q=>q.u!==u); b.queue.push({u,type}); } Voice.sfx('tap'); ui.refresh(); };
+  atk.onclick=()=>queue('atk',()=>true,()=>'');
+  sk.onclick=()=>queue('skill',u=>u.cd===0,u=>`${u.skill.name} คูลดาวน์อีก ${u.cd} เทิร์น`);
+  sk2.onclick=()=>queue('skill2',u=>u.cd2===0,u=>`${u.skill2.name} คูลดาวน์อีก ${u.cd2} เทิร์น`);
   ul.onclick=()=>{ Voice.unlock(); const u=b.heroes[sel]; if(!u||!u.alive) return; if(u.energy<100) return toast(`ท่าไม้ตาย "${u.ult.name}" ต้องการพลัง 100%`); b.queue=b.queue.filter(q=>q.u!==u); b.queue.push({u,type:'ult'}); Voice.sfx('magic'); ui.refresh(); };
   const chips=()=>{ $('#b-auto').classList.toggle('on',b.auto); $('#b-speed').textContent='x'+b.speed; $('#b-speed').classList.toggle('on',b.speed>1); };
   $('#b-auto').onclick=()=>{ b.auto=!b.auto; localStorage.setItem('pk_auto',b.auto?'1':'0'); chips(); };

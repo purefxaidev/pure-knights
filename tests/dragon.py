@@ -7,7 +7,7 @@ async def main():
       ctx=await b.new_context(viewport={'width':w,'height':h},device_scale_factor=2 if mob else 1,is_mobile=mob,has_touch=mob,locale='th-TH')
       pg=await ctx.new_page(); errs=[]; pg.on('pageerror',lambda e:errs.append(str(e)))
       await pg.goto('http://localhost:8765/'); await pg.wait_for_timeout(1500)
-      await pg.evaluate("(()=>{const S=PK.S;S.cleared=14;S.stam=150;for(const k in S.roster){S.roster[k].lvl=40;}PK.save();PK.startBattle(12);})()")
+      await pg.evaluate("(()=>{const S=PK.S;S.cleared=14;S.stam=150;S.team=['seline','lucius','seraphina','raven','veronica'];for(const id of S.team){S.roster[id]=Object.assign(S.roster[id]||{lvl:40,stars:6,shards:0,sk:[3,3]},{lvl:40});}PK.save();PK.startBattle(12);})()")
       await pg.wait_for_timeout(1500)
       if await pg.evaluate("document.getElementById('story').classList.contains('on')"): await pg.click('#story .st-skip',force=True)
       await pg.click('#b-speed'); await pg.click('#b-speed')

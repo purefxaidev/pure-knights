@@ -16,6 +16,12 @@ A mobile-first, turn-based hero-collection RPG (Seven Knights style) that runs i
 
 ---
 
+## ✨ v4 — ฉากต่อสู้ตามเรฟ / Battle composition
+- Dragon boss sits on the **right ~45%** of the screen; the five lobby-ref heroes stand on the left/center in a staggered diagonal, with the plaza visible between them.
+- Full-screen flash/purple fog removed — hits use short **local** flashes, traveling slash/beam VFX, sparks and light shake. Critical numbers are large gold italic and stay on-screen near the boss.
+- Four skill buttons (attack / skill / skill 2 / ultimate) in the bottom-center bar.
+- Art cleanup: ring medallion checker, Seraphina/Lucius slivers, skill-icon dark corners.
+
 ## ✨ v3 — กราฟิกใหม่ทั้งเกม / Visual overhaul
 - **Heroes:** Seline (UR), Veronica (SSR rate-up), Seraphina, Lucius, Raven + covered Lilith — art from the lobby reference sheet, each with unique ultimate FX and Thai voice lines.
 - **Battle HUD** rebuilt to match the reference: boss medallion + HP bar + debuff icons, turn-order column, active-hero panel, glowing purple skill buttons, hero cards, golden italic *Critical!* numbers.
