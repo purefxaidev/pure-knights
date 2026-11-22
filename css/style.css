@@ -218,7 +218,7 @@ a{color:#7fe8ff}
 #cutin .ci-name{font-family:Kanit;font-size:clamp(16px,2.6vw,26px);color:#fff;text-shadow:0 2px 0 #000}
 #cutin .ci-skill{font-family:Kanit;font-weight:900;font-size:clamp(28px,5.4vw,64px);line-height:1.05;color:#fff;max-width:min(60vw,640px);text-shadow:0 0 10px var(--c),0 0 26px var(--c),0 3px 0 #000}
 #cutin .ci-tag{display:inline-block;margin-top:6px;background:#000c;color:var(--c2);font-family:Kanit;padding:2px 12px;border-radius:8px;font-size:14px;letter-spacing:3px}
-#cutin.enemy .ci-art{left:auto;right:2%;animation-name:artR}#cutin.enemy .ci-text{right:auto;left:5%;text-align:left;transform:skewY(8deg)}#cutin.enemy .ci-band{animation-name:bandR}
+#cutin.enemy .ci-art{left:auto;right:2%;animation-name:artR;height:72%;max-width:46%;top:10%;object-position:right center}#cutin.enemy .ci-text{right:auto;left:5%;text-align:left;transform:skewY(8deg)}#cutin.enemy .ci-band{animation-name:bandR}
 #cutin.enemy .ci-lines{background:repeating-conic-gradient(#ff000033 0 2deg,#0000 2deg 7deg),radial-gradient(#0000 20%,#300d 70%)}
 @media (orientation:portrait){#cutin .ci-art{max-width:90%;height:70%;top:6%}#cutin .ci-text{top:auto;bottom:16%}}
 @keyframes spin{to{transform:rotate(25deg)}}

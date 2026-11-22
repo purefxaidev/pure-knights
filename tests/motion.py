@@ -22,8 +22,14 @@ async def main():
             await pg.wait_for_timeout(1000)
             if await pg.evaluate("!!(window.battle&&window.battle.enemies.some(e=>e.alive&&e.id==='nightdragon'))"):
                 break
-        await pg.evaluate("localStorage.setItem('pk_speed','1'); if(window.battle) window.battle.speed=1;")
-        await pg.wait_for_timeout(300)
+        await pg.evaluate("if(window.battle) window.battle.speed=1; localStorage.setItem('pk_speed','1');")
+        # click the HUD speed button until it reads x1
+        for _ in range(3):
+            label=await pg.inner_text('#b-speed')
+            if label.strip()=='x1': break
+            await pg.click('#b-speed', force=True); await pg.wait_for_timeout(150)
+        await pg.evaluate("if(window.battle) window.battle.speed=1;")
+        await pg.wait_for_timeout(200)
         frames=[]; 
         for i in range(90):  # ~6s at 15fps
             await pg.wait_for_timeout(66)
