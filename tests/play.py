@@ -1,7 +1,7 @@
 import asyncio, sys, json
 from playwright.async_api import async_playwright
 URL = sys.argv[1] if len(sys.argv)>1 else 'http://localhost:8765/'
-OUT = '/workspace/pure-rpg/shots/'
+OUT = sys.argv[2] if len(sys.argv)>2 else '/workspace/pure-rpg/shots/'
 async def main():
     async with async_playwright() as p:
         b = await p.chromium.launch(executable_path='/usr/bin/google-chrome', args=['--autoplay-policy=no-user-gesture-required'])
